@@ -1,2 +1,23 @@
 # waze-head-up-display
 Waze HUD (Head Up Display) provides navigation guidance, speed limit and current speed data from waze to a Head up display you could simply make by using an android phone. The repository contains the gradle projects for the android apps you need to build.
+<br />
+<br />
+<h2>How it works</h2>
+The project consists in 2 required android apps and another optional app used for debug purposes. The WazeDataSender_AndroidApp reads the screen of tcontents when running Waze, it is meant to be installed on an android phone or even on an Android head unit. It gets the direction arrows, multiple lanes indicators, current speed, speed limit and forwards everything to the second app, WazeHudReceiver_AndroidApp. The WazeHudReceiver_AndroidApp is meant to be installed in another android phone that can act like a HUD display. <br /><br />
+It features display flip to compensate the windshield projected image reflection. You can simply put that phone on the car dashboard just below the windshield with the screen facing up. <br /><br />
+The white dot in the corner of the app screen is used to flip the image. It also takes the rotation in consideration so you can test your best fit image flip before seating the phone. Make sure the phone is secured in place so it won't move when the car turns.<br /><br />
+Both phones must be connected in the same wifi network. Use one as a hotspot for example.<br /><br /><br /><br />
+<h2>How to install</h2>
+<h3>The Waze data sender</h3>
+Download the project then install Android Studio if you don't already have it installed.<br />
+In android Studio, click Open, go to the folder WazeDataSender_AndroidApp and select it. <br /> <br />
+Click the hammer icon from the left sidebar (build) and watch the progress of installing the dependencies until the final BUILD SUCCESSFUL message is shown.<br />
+Click the 4 horizontal lines icon from the most top left area to open the menu, go to Build > Generate App Bundles or APKs > Generate APKs.<br > <br />
+Wait for it to create the APK file. When finished, a small popup on the bottom right area of the screen will show up. Click locate to go to the folder where the APK was saved.<br />
+In that folder the app-debug.apk is the freshly built android app ready to install in the phone (or Android head unit) that will run Waze. <br /> <br />
+After installing, open the Waze Telemetry sender app. From there, enable accesibiltiy optiions (to allow screen content reading), enable floating overlay (to allow the speed limit red circle testing), start screen capture and open Waze. In Waze start navigating to a destination. If the floating red circle containing speed limit gets the value of the current speed limit from Waze, you're good to go to step 2. If it still shows "--" then you need to go to accesibility options and enable the service for waze telemetry sender. <br /><br />
+
+If the option is disabled (in Android 13 and up), you need to go to the phone settings > Apps > Waze telemetry sender > click the 3 dots icon in the top right and enable restricted permissions. Then you go back to accesibility options and enable the service for Waze telemetry sender. <br /><br />
+You can move the floating red circle to any convenient position.<br /><br /><br /><br />
+<h3>The HUD receiver</h3>
+Build the app in android studio like the previous app. Install the built app in the phone which will sit under the windshield as a HUD. Open the app and wait for data.
