@@ -8,8 +8,8 @@ android {
         applicationId 'com.interfaz.wazespeedoverlay'
         minSdk 23
         targetSdk 35
-        versionCode 23
-        versionName '22.1'
+        versionCode 22
+        versionName '22.0'
     }
 
     compileOptions {

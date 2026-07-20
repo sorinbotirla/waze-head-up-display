@@ -329,18 +329,11 @@ public class WazeSpeedAccessibilityService extends AccessibilityService {
     }
 
     private void scoreStability(NodeCandidate c) {
-        // Do not give the currently displayed limit a large score bonus.
-        // That made an old value such as 30 keep winning even after Waze
-        // changed the actual road limit to 40.
         if (c.value.equals(lastShownSpeed)) {
-            addScore(c, 15, "same as last shown speed");
+            addScore(c, 260, "same as last shown speed");
         }
-
-        // Stability is handled by applyStability(). Keep only a very small
-        // tie-breaker here so candidate selection remains driven by the
-        // current accessibility layout and context.
         if (c.value.equals(pendingSpeed)) {
-            addScore(c, Math.min(30, 10 * pendingCount), "pending candidate");
+            addScore(c, 90 * pendingCount, "pending stable candidate");
         }
     }
 
@@ -382,7 +375,7 @@ public class WazeSpeedAccessibilityService extends AccessibilityService {
         }
 
         if (detected.equals(lastShownSpeed)) {
-            pendingSpeed = "";
+            pendingSpeed = detected;
             pendingCount = 0;
             return lastShownSpeed;
         }
@@ -394,12 +387,9 @@ public class WazeSpeedAccessibilityService extends AccessibilityService {
             pendingCount = 1;
         }
 
-        // Require two consecutive scans for a changed speed limit.
-        // The scan interval is about 220 ms, so a genuine new value updates
-        // quickly while a one-frame accessibility glitch is ignored.
         if (pendingCount >= 2 || lastShownSpeed.equals("--")) {
             lastShownSpeed = detected;
-            pendingSpeed = "";
+            pendingSpeed = detected;
             pendingCount = 0;
         }
 
@@ -810,7 +800,6 @@ public class WazeSpeedAccessibilityService extends AccessibilityService {
         s += "Package: " + lastPackage + "\n";
         s += "Nodes: " + allNodes.size() + "  Candidates: " + candidates.size() + "\n";
         s += "Last shown: " + lastShownSpeed + "\n";
-        s += "Pending limit: " + pendingSpeed + " (" + pendingCount + ")\n";
         s += FlirCamUdpTransport.get(this).getStatus() + "\n\n";
         Collections.sort(candidates, new Comparator<NodeCandidate>() {
             public int compare(NodeCandidate a, NodeCandidate b) {
