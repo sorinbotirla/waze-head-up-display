@@ -42,8 +42,6 @@ public class MockLocationService extends Service {
 
     private volatile boolean playing = false;
     private volatile boolean paused = false;
-    private volatile boolean holdLastLocation = true;
-    private volatile long lastHoldInjectionMs = 0L;
     private volatile int updateHz = 8;
     private volatile int currentSegment = 0;
     private volatile double segmentProgressMeters = 0.0;
@@ -281,7 +279,6 @@ public class MockLocationService extends Service {
             }
 
             updateHz = Math.max(1, Math.min(20, route.optInt("updateHz", 8)));
-            holdLastLocation = route.optBoolean("holdLastLocation", true);
             currentSegment = 0;
             segmentProgressMeters = 0.0;
             playing = false;
@@ -311,22 +308,9 @@ public class MockLocationService extends Service {
     private JSONObject stopPlayback() throws Exception {
         playing = false;
         paused = false;
-
-        if (holdLastLocation && lastInjected != null) {
-            inject(
-                lastInjected.getLatitude(),
-                lastInjected.getLongitude(),
-                0f,
-                lastInjected.getBearing()
-            );
-            lastHoldInjectionMs = System.currentTimeMillis();
-            updateNotification("Stopped · holding last location");
-        } else {
-            currentSegment = 0;
-            segmentProgressMeters = 0.0;
-            updateNotification("Stopped");
-        }
-
+        currentSegment = 0;
+        segmentProgressMeters = 0.0;
+        updateNotification("Stopped");
         return statusJson();
     }
 
@@ -342,18 +326,6 @@ public class MockLocationService extends Service {
                 try {
                     if (playing && !paused) {
                         tick(dt);
-                    } else if (
-                        holdLastLocation
-                        && lastInjected != null
-                        && System.currentTimeMillis() - lastHoldInjectionMs >= 1000L
-                    ) {
-                        inject(
-                            lastInjected.getLatitude(),
-                            lastInjected.getLongitude(),
-                            0f,
-                            lastInjected.getBearing()
-                        );
-                        lastHoldInjectionMs = System.currentTimeMillis();
                     }
                 } catch (Exception e) {
                     lastError = "Playback: " + e.getMessage();
@@ -461,7 +433,6 @@ public class MockLocationService extends Service {
         obj.put("currentSegment", currentSegment);
         obj.put("segmentProgressMeters", segmentProgressMeters);
         obj.put("updateHz", updateHz);
-        obj.put("holdLastLocation", holdLastLocation);
         obj.put("lastError", lastError);
 
         if (lastInjected != null) {

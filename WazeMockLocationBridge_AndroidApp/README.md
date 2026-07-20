@@ -24,3 +24,10 @@ The app publishes mock fixes through the GPS and network test providers, includi
 - accuracy
 - wall-clock time
 - elapsed realtime
+
+
+## v2 fix
+
+The manifest now declares `android.permission.ACCESS_MOCK_LOCATION`. Android uses this declaration to list the app under **Developer Options > Select mock location app**.
+
+Uninstall the old APK before installing the rebuilt v2 APK so Android refreshes the eligible-app list.
