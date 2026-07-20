@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#101216">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Waze Mock Location Bridge"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="1. Enable Developer Options.\n2. Select this app under “Select mock location app”.\n3. Connect USB debugging to the PC.\n4. Start the PC route server."
+        android:textColor="#C9CFD8"
+        android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Start bridge service"/>
+
+    <Button
+        android:id="@+id/developerButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Open Developer Options"/>
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp"
+        android:padding="12dp"
+        android:background="#1A1E24"
+        android:textColor="#AEE6FF"
+        android:textSize="14sp"
+        android:typeface="monospace"
+        android:text="Service not started."/>
+</LinearLayout>

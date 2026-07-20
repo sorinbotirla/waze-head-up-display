@@ -1,0 +1,19 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.interfaz.wazespeedoverlay'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.interfaz.wazespeedoverlay'
+        minSdk 23
+        targetSdk 35
+        versionCode 23
+        versionName '22.1'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

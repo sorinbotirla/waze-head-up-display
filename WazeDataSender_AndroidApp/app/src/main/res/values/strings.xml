@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Waze Speed Overlay</string>
+    <string name="accessibility_name">Waze Speed Reader</string>
+    <string name="accessibility_description">Reads visible Waze speed-limit text and shows it in a floating overlay.</string>
+</resources>
