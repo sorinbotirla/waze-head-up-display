@@ -1,0 +1,7 @@
+HUD Receiver V31.1
+
+- Added a visible "< >" flip control at the bottom center.
+- Tapping the control flips/unflips the HUD.
+- The flip control is draggable and pinch-resizable like the other HUD elements.
+- The flip control shows the same white selection outline while touched.
+- Its position and scale are saved automatically.

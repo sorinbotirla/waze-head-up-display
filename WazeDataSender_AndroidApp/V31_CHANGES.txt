@@ -1,0 +1,6 @@
+Waze Data Sender V31
+
+- Reduced the normal overlay window to the exact 96 x 96 dp speed-circle area.
+- The invisible area to the right no longer intercepts screen touches.
+- Long-pressing the circle can still expand/collapse the optional debug panel.
+- Updated Android app version to 31.

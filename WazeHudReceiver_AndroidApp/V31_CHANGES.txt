@@ -1,0 +1,11 @@
+HUD Receiver V31
+
+- Removed the visible white mirror/flip circle.
+- Navigation header, current-speed block, and speed-limit/alert block are independently editable.
+- Touch an element to display its white rounded outline.
+- Drag with one finger to reposition it.
+- Pinch with two fingers to resize it without rotation.
+- Position and scale are saved automatically when the last finger is released.
+- Saved layout is restored after restarting the application.
+- Scale range: 35% to 250%.
+- Based on the V30.1 networking/header-fixed receiver.

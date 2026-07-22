@@ -102,7 +102,11 @@ public class HudUdpReceiver {
             object.put("protocol", 7);
             object.put("local_ip", localIp);
             byte[] bytes = object.toString().getBytes(StandardCharsets.UTF_8);
-            socket.send(new DatagramPacket(bytes, bytes.length, InetAddress.getByName(target), 5060));
+            // Current sender listens on 5064. Also send to legacy 5060 so older
+            // sender builds remain discoverable.
+            InetAddress address = InetAddress.getByName(target);
+            socket.send(new DatagramPacket(bytes, bytes.length, address, 5064));
+            socket.send(new DatagramPacket(bytes, bytes.length, address, 5060));
         } catch (Exception error) {
             lastError = "hello: " + safeMessage(error);
         } finally {

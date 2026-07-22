@@ -428,14 +428,18 @@ public class WazeSpeedAccessibilityService extends AccessibilityService {
         String accessibilityManeuver = findManeuver(nodes);
         JSONArray lanes = findStructuredLanes(nodes);
 
-        boolean navigationValid = distance >= 0
-            && road.length() >= 2
-            && !looksLikeClockOrEta(road);
+        // Waze sometimes shows only the maneuver arrow and distance.
+        // The road-name node is optional and must not invalidate the header.
+        boolean roadValid = road.length() >= 2 && !looksLikeClockOrEta(road);
+        boolean navigationValid = distance >= 0;
 
         if (navigationValid) {
             TelemetryState.setDistanceM(distance);
-            TelemetryState.setRoadName(road);
-            TelemetryState.setRawTextBounds(distanceNode.bounds, roadNode.bounds);
+            TelemetryState.setRoadName(roadValid ? road : "");
+            TelemetryState.setRawTextBounds(
+                distanceNode == null ? null : distanceNode.bounds,
+                roadValid && roadNode != null ? roadNode.bounds : null
+            );
             if (!"unknown".equals(accessibilityManeuver)) {
                 TelemetryState.setManeuver(accessibilityManeuver);
             }

@@ -90,8 +90,8 @@ public class WazeSpeedOverlayManager {
         }
 
         params = new WindowManager.LayoutParams(
-            dp(360),
-            dp(120),
+            dp(96),
+            dp(96),
             type,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             android.graphics.PixelFormat.TRANSLUCENT
@@ -152,6 +152,9 @@ public class WazeSpeedOverlayManager {
             if (dx < 8 && dy < 8 && dt > 450) {
                 debugExpanded = !debugExpanded;
                 debugView.setVisibility(debugExpanded ? View.VISIBLE : View.GONE);
+                params.width = debugExpanded ? dp(360) : dp(96);
+                params.height = debugExpanded ? dp(120) : dp(96);
+                windowManager.updateViewLayout(rootView, params);
             }
             return true;
         }

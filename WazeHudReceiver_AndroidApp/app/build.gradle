@@ -7,8 +7,8 @@ android {
         applicationId 'com.interfaz.hudnavigation'
         minSdk 23
         targetSdk 35
-        versionCode 20
-        versionName '15.4'
+        versionCode 31
+        versionName '31'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17

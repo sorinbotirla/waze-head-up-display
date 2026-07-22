@@ -1,6 +1,7 @@
 package com.interfaz.hudnavigation;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
@@ -18,7 +19,30 @@ public class HudView extends View {
     private final Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint text=new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint thin=new Paint(Paint.ANTI_ALIAS_FLAG);
-    private float dotX,dotY,dotR;
+    private static final int ELEMENT_NONE=0;
+    private static final int ELEMENT_HEADER=1;
+    private static final int ELEMENT_SPEED=2;
+    private static final int ELEMENT_LIMIT=3;
+    private static final int ELEMENT_FLIP=4;
+
+    private final SharedPreferences layoutPreferences;
+    private final ElementTransform headerTransform=new ElementTransform();
+    private final ElementTransform speedTransform=new ElementTransform();
+    private final ElementTransform limitTransform=new ElementTransform();
+    private final ElementTransform flipTransform=new ElementTransform();
+    private final RectF headerBaseBounds=new RectF();
+    private final RectF speedBaseBounds=new RectF();
+    private final RectF limitBaseBounds=new RectF();
+    private final RectF flipBaseBounds=new RectF();
+    private final Paint selectionPaint=new Paint(Paint.ANTI_ALIAS_FLAG);
+
+    private int selectedElement=ELEMENT_NONE;
+    private float lastTouchX;
+    private float lastTouchY;
+    private float initialPinchDistance;
+    private float initialElementScale;
+    private boolean gestureMoved;
+    private long gestureDownTime;
     private static final long STABILITY_MS=1000L;
     private static final long FADE_MS=1000L;
 
@@ -60,8 +84,16 @@ public class HudView extends View {
 
     public HudView(Context context){
         super(context); setBackgroundColor(Color.BLACK);
+        layoutPreferences=context.getSharedPreferences("hud_element_layout_v31",Context.MODE_PRIVATE);
+        loadElementTransform("header",headerTransform);
+        loadElementTransform("speed",speedTransform);
+        loadElementTransform("limit",limitTransform);
+        loadElementTransform("flip",flipTransform);
         text.setTypeface(Typeface.create("sans-serif-light",Typeface.NORMAL));
         thin.setStyle(Paint.Style.STROKE); thin.setStrokeCap(Paint.Cap.ROUND); thin.setStrokeJoin(Paint.Join.ROUND);
+        selectionPaint.setStyle(Paint.Style.STROKE);
+        selectionPaint.setStrokeWidth(Math.max(2f,getResources().getDisplayMetrics().density*2f));
+        selectionPaint.setColor(Color.WHITE);
     }
     public void toggleMirror(){ mirrored=!mirrored; invalidate(); }
     public void postFrame(final JSONObject value){
@@ -229,7 +261,8 @@ public class HudView extends View {
             c.restoreToCount(layer);
         }
 
-        drawMirrorDot(c,w,h);
+        drawFlipControl(c,w,h);
+        drawSelectionOutline(c);
         c.restore();
 
         if(
@@ -244,12 +277,14 @@ public class HudView extends View {
     }
 
     private void drawSemantic(Canvas c,int w,int h){
+        updateBaseBounds(w,h);
         boolean navigationValid=frame.optBoolean("navigation_valid",false);
         boolean currentSpeedValid=frame.optBoolean("current_speed_valid",frame.optInt("current_speed",-1)>=0);
         boolean speedLimitValid=frame.optBoolean("speed_limit_valid",isNumericLimit(frame.optString("speed_limit","")));
         String alert=frame.optString("alert","");
 
         if(navigationValid){
+            int navigationLayer=beginElementTransform(c,headerBaseBounds,headerTransform);
             boolean rawHeaderSupported=frame.optBoolean("raw_header_supported",false);
 
             if(rawHeaderSupported&&displayedHeaderBitmap!=null&&headerAlpha>0.001f){
@@ -296,15 +331,19 @@ public class HudView extends View {
                 float maxRoadWidth=w-roadX-Math.max(30f,w*0.05f);
                 drawFittedText(c,road,roadX,roadY,maxRoadWidth,roadSize,Math.max(17f,h*0.040f));
             }
+            c.restoreToCount(navigationLayer);
         }
 
         if(currentSpeedValid&&speedAlpha>0.001f){
+            int elementLayer=beginElementTransform(c,speedBaseBounds,speedTransform);
             int layer=c.saveLayerAlpha(0,0,w,h,Math.round(speedAlpha*255f));
             drawCurrentSpeed(c,w,h,frame.optInt("current_speed",-1));
             c.restoreToCount(layer);
+            c.restoreToCount(elementLayer);
         }
 
         if((speedLimitValid||alert.length()>0)&&speedLimitAlpha>0.001f){
+            int elementLayer=beginElementTransform(c,limitBaseBounds,limitTransform);
             int layer=c.saveLayerAlpha(0,0,w,h,Math.round(speedLimitAlpha*255f));
             drawSpeedAndAlert(
                 c,
@@ -315,6 +354,7 @@ public class HudView extends View {
                 speedLimitValid
             );
             c.restoreToCount(layer);
+            c.restoreToCount(elementLayer);
         }
     }
 
@@ -800,6 +840,207 @@ public class HudView extends View {
     }
     private Drawable alertDrawable(String a){int id=0;if("police".equals(a))id=R.drawable.alert_police;else if("speed_camera".equals(a))id=R.drawable.alert_speed_camera;else if("red_light_camera".equals(a))id=R.drawable.alert_red_light_camera;else if("accident".equals(a))id=R.drawable.alert_accident;else if("traffic".equals(a))id=R.drawable.alert_traffic;else if("construction".equals(a))id=R.drawable.alert_construction;else if("pothole".equals(a))id=R.drawable.alert_pothole;else if("closure".equals(a))id=R.drawable.alert_closure;else if("hazard".equals(a))id=R.drawable.alert_hazard;return id==0?null:getResources().getDrawable(id);}
     private void drawWaiting(Canvas c,int w,int h){ drawNoData(c,w,h); }
-    private void drawMirrorDot(Canvas c,int w,int h){float xdpi=getResources().getDisplayMetrics().xdpi;dotR=Math.max(9f,((.5f/2.54f)*xdpi)/2f);dotX=w-dotR*1.8f;dotY=dotR*1.8f;p.setStyle(Paint.Style.FILL);p.setColor(Color.WHITE);c.drawCircle(dotX,dotY,dotR,p);}
-    public boolean onTouchEvent(MotionEvent e){if(e.getAction()!=MotionEvent.ACTION_UP)return true;float ax=mirrored?getWidth()-dotX:dotX,dx=e.getX()-ax,dy=e.getY()-dotY;if(dx*dx+dy*dy<=dotR*dotR*4)toggleMirror();return true;}
+
+    private void drawFlipControl(Canvas canvas,int width,int height){
+        int save=beginElementTransform(canvas,flipBaseBounds,flipTransform);
+        float cx=flipBaseBounds.centerX();
+        float cy=flipBaseBounds.centerY();
+        float radius=Math.min(flipBaseBounds.width(),flipBaseBounds.height())*.46f;
+
+        p.setStyle(Paint.Style.FILL);
+        p.setColor(Color.rgb(55,55,55));
+        canvas.drawCircle(cx,cy,radius,p);
+
+        text.setColor(Color.WHITE);
+        text.setTypeface(Typeface.create("sans-serif",Typeface.NORMAL));
+        text.setTextAlign(Paint.Align.CENTER);
+        text.setTextSize(radius*.82f);
+        Paint.FontMetrics metrics=text.getFontMetrics();
+        float baseline=cy-(metrics.ascent+metrics.descent)/2f;
+        canvas.drawText("< >",cx,baseline,text);
+        canvas.restoreToCount(save);
+    }
+
+    private void updateBaseBounds(int width,int height){
+        headerBaseBounds.set(0f,0f,width,height*.60f);
+        speedBaseBounds.set(width*.035f,height*.67f,width*.59f,height*.96f);
+        limitBaseBounds.set(width*.61f,height*.65f,width*.99f,height*.95f);
+        float flipSize=Math.max(52f,Math.min(width,height)*.105f);
+        float flipCx=width*.50f;
+        float flipCy=height*.91f;
+        flipBaseBounds.set(flipCx-flipSize*.5f,flipCy-flipSize*.5f,flipCx+flipSize*.5f,flipCy+flipSize*.5f);
+    }
+
+    private int beginElementTransform(Canvas canvas,RectF bounds,ElementTransform transform){
+        int save=canvas.save();
+        float centerX=bounds.centerX();
+        float centerY=bounds.centerY();
+        canvas.translate(transform.offsetX,transform.offsetY);
+        canvas.scale(transform.scale,transform.scale,centerX,centerY);
+        return save;
+    }
+
+    private RectF transformedBounds(RectF base,ElementTransform transform){
+        float centerX=base.centerX();
+        float centerY=base.centerY();
+        float halfWidth=base.width()*transform.scale*.5f;
+        float halfHeight=base.height()*transform.scale*.5f;
+        return new RectF(
+            centerX+transform.offsetX-halfWidth,
+            centerY+transform.offsetY-halfHeight,
+            centerX+transform.offsetX+halfWidth,
+            centerY+transform.offsetY+halfHeight
+        );
+    }
+
+    private void drawSelectionOutline(Canvas canvas){
+        RectF bounds=null;
+        if(selectedElement==ELEMENT_HEADER)bounds=transformedBounds(headerBaseBounds,headerTransform);
+        else if(selectedElement==ELEMENT_SPEED)bounds=transformedBounds(speedBaseBounds,speedTransform);
+        else if(selectedElement==ELEMENT_LIMIT)bounds=transformedBounds(limitBaseBounds,limitTransform);
+        else if(selectedElement==ELEMENT_FLIP)bounds=transformedBounds(flipBaseBounds,flipTransform);
+        if(bounds==null)return;
+
+        float padding=Math.max(5f,getResources().getDisplayMetrics().density*4f);
+        bounds.inset(-padding,-padding);
+        canvas.drawRoundRect(bounds,8f,8f,selectionPaint);
+    }
+
+    private int hitTestElement(float x,float y){
+        // Smaller foreground elements take priority over the large header region.
+        if(transformedBounds(flipBaseBounds,flipTransform).contains(x,y))return ELEMENT_FLIP;
+        if(transformedBounds(limitBaseBounds,limitTransform).contains(x,y))return ELEMENT_LIMIT;
+        if(transformedBounds(speedBaseBounds,speedTransform).contains(x,y))return ELEMENT_SPEED;
+        if(transformedBounds(headerBaseBounds,headerTransform).contains(x,y))return ELEMENT_HEADER;
+        return ELEMENT_NONE;
+    }
+
+    private ElementTransform selectedTransform(){
+        if(selectedElement==ELEMENT_HEADER)return headerTransform;
+        if(selectedElement==ELEMENT_SPEED)return speedTransform;
+        if(selectedElement==ELEMENT_LIMIT)return limitTransform;
+        if(selectedElement==ELEMENT_FLIP)return flipTransform;
+        return null;
+    }
+
+    private float touchX(MotionEvent event,int pointerIndex){
+        float x=event.getX(pointerIndex);
+        return mirrored?getWidth()-x:x;
+    }
+
+    private float pointerDistance(MotionEvent event){
+        if(event.getPointerCount()<2)return 0f;
+        float dx=touchX(event,1)-touchX(event,0);
+        float dy=event.getY(1)-event.getY(0);
+        return (float)Math.sqrt(dx*dx+dy*dy);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        int action=event.getActionMasked();
+
+        if(action==MotionEvent.ACTION_DOWN){
+            updateBaseBounds(getWidth(),getHeight());
+            float x=touchX(event,0);
+            float y=event.getY(0);
+            selectedElement=hitTestElement(x,y);
+            lastTouchX=x;
+            lastTouchY=y;
+            initialPinchDistance=0f;
+            gestureMoved=false;
+            gestureDownTime=System.currentTimeMillis();
+            invalidate();
+            return selectedElement!=ELEMENT_NONE;
+        }
+
+        if(selectedElement==ELEMENT_NONE)return false;
+
+        ElementTransform transform=selectedTransform();
+        if(transform==null)return false;
+
+        if(action==MotionEvent.ACTION_POINTER_DOWN&&event.getPointerCount()>=2){
+            initialPinchDistance=pointerDistance(event);
+            initialElementScale=transform.scale;
+            invalidate();
+            return true;
+        }
+
+        if(action==MotionEvent.ACTION_MOVE){
+            if(event.getPointerCount()>=2){
+                float distance=pointerDistance(event);
+                if(initialPinchDistance>0f&&distance>0f){
+                    transform.scale=clamp(initialElementScale*(distance/initialPinchDistance),.35f,2.50f);
+                    gestureMoved=true;
+                }
+            }else{
+                float x=touchX(event,0);
+                float y=event.getY(0);
+                float deltaX=x-lastTouchX;
+                float deltaY=y-lastTouchY;
+                transform.offsetX+=deltaX;
+                transform.offsetY+=deltaY;
+                if(Math.abs(deltaX)>1f||Math.abs(deltaY)>1f)gestureMoved=true;
+                lastTouchX=x;
+                lastTouchY=y;
+            }
+            invalidate();
+            return true;
+        }
+
+        if(action==MotionEvent.ACTION_POINTER_UP){
+            int remainingIndex=event.getActionIndex()==0?1:0;
+            if(remainingIndex<event.getPointerCount()){
+                lastTouchX=touchX(event,remainingIndex);
+                lastTouchY=event.getY(remainingIndex);
+            }
+            initialPinchDistance=0f;
+            initialElementScale=transform.scale;
+            invalidate();
+            return true;
+        }
+
+        if(action==MotionEvent.ACTION_UP||action==MotionEvent.ACTION_CANCEL){
+            boolean flipTap=action==MotionEvent.ACTION_UP
+                &&selectedElement==ELEMENT_FLIP
+                &&!gestureMoved
+                &&System.currentTimeMillis()-gestureDownTime<500L;
+            saveSelectedTransform();
+            if(flipTap)toggleMirror();
+            selectedElement=ELEMENT_NONE;
+            initialPinchDistance=0f;
+            invalidate();
+            return true;
+        }
+
+        return true;
+    }
+
+    private float clamp(float value,float minimum,float maximum){
+        return Math.max(minimum,Math.min(maximum,value));
+    }
+
+    private void loadElementTransform(String key,ElementTransform transform){
+        transform.offsetX=layoutPreferences.getFloat(key+"_x",0f);
+        transform.offsetY=layoutPreferences.getFloat(key+"_y",0f);
+        transform.scale=layoutPreferences.getFloat(key+"_scale",1f);
+    }
+
+    private void saveSelectedTransform(){
+        ElementTransform transform=selectedTransform();
+        if(transform==null)return;
+
+        String key=selectedElement==ELEMENT_HEADER?"header":selectedElement==ELEMENT_SPEED?"speed":selectedElement==ELEMENT_LIMIT?"limit":"flip";
+        layoutPreferences.edit()
+            .putFloat(key+"_x",transform.offsetX)
+            .putFloat(key+"_y",transform.offsetY)
+            .putFloat(key+"_scale",transform.scale)
+            .apply();
+    }
+
+    private static class ElementTransform{
+        float offsetX;
+        float offsetY;
+        float scale=1f;
+    }
 }
+
