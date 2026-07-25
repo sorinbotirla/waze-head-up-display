@@ -2,6 +2,67 @@
 Waze HUD (Head Up Display) provides navigation guidance, speed limit and current speed data from waze to a Head up display you could simply make by using an android phone. The repository contains the gradle projects for the android apps you need to build.
 <br />
 <br />
+<h2>Screenshots from the apps</h2>
+<table width="100%">
+  <tr width="100%">
+    <td width="50%" valign="top">
+      <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-175810.jpg" />
+      <br />
+      <br />
+      <span>The phone running Waze and the data sender app - Simple turn indicator</span>
+    </td>
+    <td width="50%" valign="top">
+      <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-175809.jpg" />
+      <br />
+      <br />
+      <span>The phone running the HUD receiver app - Simple turn indicator</span>
+    </td>
+  </tr>
+  <tr width="100%">
+    <td width="50%" valign="top">
+      <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-175535.jpg" />
+      <br />
+      <br />
+      <span>The phone running Waze and the data sender app - Multiple lanes - single turn</span>
+    </td>
+    <td width="50%" valign="top">
+      <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-175534.jpg" />
+      <br />
+      <br />
+      <span>The phone running the HUD receiver app - Multiple lanes - single turn</span>
+    </td>
+  </tr>
+  <tr width="100%">
+    <td width="50%" valign="top">
+      <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-175502.jpg" />
+      <br />
+      <br />
+      <span>The phone running Waze and the data sender app - Multiple lanes - multiple turns</span>
+    </td>
+    <td width="50%" valign="top">
+      <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-175501.jpg" />
+      <br />
+      <br />
+      <span>The phone running the HUD receiver app - Multiple lanes - multiple turns</span>
+    </td>
+  </tr>
+  <tr width="100%">
+    <td width="50%" valign="top">
+      <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-185945.jpg" />
+      <br />
+      <br />
+      <span>The phone running Waze and the data sender app - Multiple lanes - multiple straight directions</span>
+    </td>
+    <td width="50%" valign="top">
+      <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-185951.jpg" />
+      <br />
+      <br />
+      <span>The phone running the HUD receiver app - Multiple laness - multiple straight directions</span>
+    </td>
+  </tr>
+</table>
+<br />
+<br />
 <h2>How it works</h2>
 The project consists in 2 required android apps and another optional app used for debug purposes. The WazeDataSender_AndroidApp reads the screen UI content when running Waze, it is meant to be installed on an android phone or even on an Android head unit. It reads the direction arrows, multiple lanes indicators, current speed, speed limit and forwards everything to the second app, WazeHudReceiver_AndroidApp via WiFi. The WazeHudReceiver_AndroidApp is meant to be installed in another android phone that can act like a HUD display. You simply put that phone below the windshield and the image is reflected back to the driver. A HUD film can be applied on the windshield to prevent image ghosting. <br /><br />
 The HUD Receiver app features display flip to compensate the windshield projected image reflection. <br /><br />
