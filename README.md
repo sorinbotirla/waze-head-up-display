@@ -5,13 +5,13 @@ Waze HUD (Head Up Display) provides navigation guidance, speed limit and current
 <h2>Screenshots from the apps</h2>
 <table width="100%">
   <tr width="100%">
-    <td width="50%" valign="top">
+    <td width="20%" valign="top">
       <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-175810.jpg" />
       <br />
       <br />
       <span>The phone running Waze and the data sender app - Simple turn indicator</span>
     </td>
-    <td width="50%" valign="top">
+    <td width="80%" valign="top">
       <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-175809.jpg" />
       <br />
       <br />
@@ -19,13 +19,13 @@ Waze HUD (Head Up Display) provides navigation guidance, speed limit and current
     </td>
   </tr>
   <tr width="100%">
-    <td width="50%" valign="top">
+    <td width="20%" valign="top">
       <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-175535.jpg" />
       <br />
       <br />
       <span>The phone running Waze and the data sender app - Multiple lanes - single turn</span>
     </td>
-    <td width="50%" valign="top">
+    <td width="80%" valign="top">
       <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-175534.jpg" />
       <br />
       <br />
@@ -33,13 +33,13 @@ Waze HUD (Head Up Display) provides navigation guidance, speed limit and current
     </td>
   </tr>
   <tr width="100%">
-    <td width="50%" valign="top">
+    <td width="20%" valign="top">
       <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-175502.jpg" />
       <br />
       <br />
       <span>The phone running Waze and the data sender app - Multiple lanes - multiple turns</span>
     </td>
-    <td width="50%" valign="top">
+    <td width="80%" valign="top">
       <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-175501.jpg" />
       <br />
       <br />
@@ -47,13 +47,13 @@ Waze HUD (Head Up Display) provides navigation guidance, speed limit and current
     </td>
   </tr>
   <tr width="100%">
-    <td width="50%" valign="top">
+    <td width="20%" valign="top">
       <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-185945.jpg" />
       <br />
       <br />
       <span>The phone running Waze and the data sender app - Multiple lanes - multiple straight directions</span>
     </td>
-    <td width="50%" valign="top">
+    <td width="80%" valign="top">
       <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/Screenshot_20260720-185951.jpg" />
       <br />
       <br />
