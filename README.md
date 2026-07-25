@@ -3,9 +3,10 @@ Waze HUD (Head Up Display) provides navigation guidance, speed limit and current
 <br />
 <br />
 <h2>How it works</h2>
-The project consists in 2 required android apps and another optional app used for debug purposes. The WazeDataSender_AndroidApp reads the screen of tcontents when running Waze, it is meant to be installed on an android phone or even on an Android head unit. It gets the direction arrows, multiple lanes indicators, current speed, speed limit and forwards everything to the second app, WazeHudReceiver_AndroidApp. The WazeHudReceiver_AndroidApp is meant to be installed in another android phone that can act like a HUD display. <br /><br />
-It features display flip to compensate the windshield projected image reflection. You can simply put that phone on the car dashboard just below the windshield with the screen facing up. <br /><br />
-The white dot in the corner of the app screen is used to flip the image. It also takes the rotation in consideration so you can test your best fit image flip before seating the phone. Make sure the phone is secured in place so it won't move when the car turns.<br /><br />
+The project consists in 2 required android apps and another optional app used for debug purposes. The WazeDataSender_AndroidApp reads the screen UI content when running Waze, it is meant to be installed on an android phone or even on an Android head unit. It reads the direction arrows, multiple lanes indicators, current speed, speed limit and forwards everything to the second app, WazeHudReceiver_AndroidApp via WiFi. The WazeHudReceiver_AndroidApp is meant to be installed in another android phone that can act like a HUD display. You simply put that phone below the windshield and the image is reflected back to the driver. A HUD film can be applied on the windshield to prevent image ghosting. <br /><br />
+The HUD Receiver app features display flip to compensate the windshield projected image reflection. <br /><br />
+The flip icon used to flip the image. It also takes the rotation in consideration so you can test your best fit image flip before seating the phone. Make sure the phone is secured in place so it won't move when the car turns.<br /><br />
+HUD App supports dragging and resizing of all the UI components, the direction indicators, driving speed and speed limit. You can place them as you need on the screen.
 Both phones must be connected in the same wifi network. Use one as a hotspot for example.<br /><br /><br /><br />
 <h2>How to install</h2>
 <h3>The Waze data sender</h3>
