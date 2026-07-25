@@ -105,4 +105,4 @@ Build the WazeMockLocationBridge_AndroidApp or install the  MockLocationBridge.a
 and then open <br />
 <code>http://127.0.0.1:8765/</code>
 <br />
-Connect the phone on USB cable and enable debugging (or do it wirelessly). There you can click on the map to add markers, define speed (default is 30kmh) and click send route and play. The phone will automatically follow the coordinates and route because the app is playing the coordinates you created.
+Connect the phone on USB cable and enable debugging (or do it wirelessly). There you can click on the map to add markers, define speed (default is 30kmh) and click send route and play. The phone will get a fake GPS position and it will automatically follow the route you created. Remember to disable the mock location app when you need to use the real GPS position.
