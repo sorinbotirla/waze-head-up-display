@@ -88,3 +88,15 @@ If the option is disabled (in Android 13 and up), you need to go to the phone se
 You can move the floating red circle to any convenient position.<br /><br /><br /><br />
 <h3>The HUD receiver</h3>
 Build the app in android studio like the previous app. Install the built app in the phone which will sit under the windshield as a HUD. Open the app and wait for data.
+<br />
+<br />
+<h2>PC Route Simulator</h2>
+This service consists of a web app and an android app. The web app allows you to create waypoints on the map, define custom speed of each segments and send the route to the phone. The app receives the data and mocks the GPS location, allowing you to test how the waze sender behaves on different roads before actually driving there yet.
+<br />
+<br />
+<img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/pc-route-simulator.jpg" width="100%" />
+<br />
+<img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/pc-route-simulator-2.jpg" width="100%" />
+<br />
+<br />
+Build the WazeMockLocationBridge_AndroidApp or install the  MockLocationBridge.apk, go to developer options, set the Mock Location app and open waze. On the PC, run start_server.bat on windows or simply ``python3 server.py`` and then open http://127.0.0.1:8765/. Connect the phone on USB cable and enable debugging (or do it wirelessly). There you can click on the map to add markers, define speed (default is 30kmh) and click send route and play. The phone will automatically follow the coordinates and route because the app is playing the coordinates you created.
