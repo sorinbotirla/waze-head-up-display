@@ -1,7 +1,7 @@
 # waze-head-up-display
 <br />
 <br />
-<img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/19642032-a702-48ce-8dbe-909236f4a614.png" width="100%" height="auto" />
+<img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/hud-night.png" width="100%" height="auto" />
 <br />
 <br />
 Waze HUD (Head Up Display) provides navigation guidance, speed limit and current speed data from waze to a Head up display you could simply make by using an android phone. The repository contains the gradle projects for the android apps you need to build.
