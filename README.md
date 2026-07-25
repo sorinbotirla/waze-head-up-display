@@ -99,4 +99,10 @@ This service consists of a web app and an android app. The web app allows you to
 <img src="https://raw.githubusercontent.com/sorinbotirla/waze-head-up-display/refs/heads/main/images/pc-route-simulator-2.jpg" width="100%" />
 <br />
 <br />
-Build the WazeMockLocationBridge_AndroidApp or install the  MockLocationBridge.apk, go to developer options, set the Mock Location app and open waze. On the PC, run start_server.bat on windows or simply ``python3 server.py`` and then open http://127.0.0.1:8765/. Connect the phone on USB cable and enable debugging (or do it wirelessly). There you can click on the map to add markers, define speed (default is 30kmh) and click send route and play. The phone will automatically follow the coordinates and route because the app is playing the coordinates you created.
+Build the WazeMockLocationBridge_AndroidApp or install the  MockLocationBridge.apk, go to developer options, set the Mock Location app and open waze. On the PC, run start_server.bat on windows or simply <br />
+<code>python3 server.py</code>
+<br />
+and then open <br />
+<code>http://127.0.0.1:8765/</code>
+<br />
+Connect the phone on USB cable and enable debugging (or do it wirelessly). There you can click on the map to add markers, define speed (default is 30kmh) and click send route and play. The phone will automatically follow the coordinates and route because the app is playing the coordinates you created.
